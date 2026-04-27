@@ -1,161 +1,212 @@
 import itsc2214.LightsOff;
-import java.util.Scanner;
+import java.util.Random;
 
+/**
+ * Implements the Lights Off game logic.
+ *
+ * Board representation:
+ * true = light ON
+ * false = light OFF
+ */
 public class Project1 implements LightsOff {
 
-    // Define 3 constructors
+    /** Character representing a light that is on. */
+    private static final String ON = "o";
 
-    /**
-     * Returns the number of wins so far.
-     * 
-     * @return number of wins
+    /** Character representing a light that is off. */
+    private static final String OFF = "x";
+
+    /** Row separator character. */
+    private static final char ROW_SEPARATOR = '|';
+
+    /** Random generator for board selection. */
+    private static final Random RAND = new Random();
+
+    /** Game board (true = on, false = off). */
+    private boolean[][] board;
+
+    /** Size of the square board. */
+    private int size;
+
+    /** Number of moves in the current game. */
+    private int numMoves;
+
+    /** Total number of games won. */
+    private int numWins;
+
+    /*
+     * =========================================================
+     * CONSTRUCTORS
+     * =========================================================
      */
+
+    /** Creates a new game using a random predefined board. */
+    public Project1() {
+        numWins = 0;
+        initialize();
+    }
+
+    /** Creates a new game using a specific predefined board. */
+    public Project1(int boardIndex) {
+        numWins = 0;
+        initialize(boardIndex);
+    }
+
+    /** Creates a new game using a string-based board layout. */
+    public Project1(String boardStr) {
+        numWins = 0;
+        initialize(boardStr);
+    }
+
+    /*
+     * =========================================================
+     * ACCESSORS
+     * =========================================================
+     */
+
+    @Override
     public int numWins() {
-        return 0;
+        return numWins;
     }
 
-    /**
-     * Returns the size of the board. The board is always
-     * a square of size.
-     * 
-     * @return size of the board
-     */
+    @Override
     public int size() {
-        return 0;
+        return size;
     }
 
-    /**
-     * Initialized the game using one of the boards
-     * defined in the LightsOff interface. Select
-     * a random number between 0 and boards.length
-     * and call initialize(boards[index selected])
-     */
-    public void initialize() {
-        int idx = 0; // generate a random int
-        initialize(boards[idx]);
+    @Override
+    public int numMoves() {
+        return numMoves;
     }
 
-    /**
-     * Initialize the game based on the index of one
-     * of the boards in the LightsOff interface.
-     * This method can in effect simply redirect the
-     * call to <code>initialize(boards[boardIndex])</code>.
-     * If the index is not valid, it should use 0.
-     * 
-     * @param boardIndex a value between 0 and <code>boards.length</code>
-     */
-    public void initialize(int boardIndex) {
-        initialize(boards[boardIndex]);
+    @Override
+    public boolean validPosition(int row, int col) {
+        return row >= 0 && row < size && col >= 0 && col < size;
     }
 
-    /**
-     * Initialize a board using a string representation of a
-     * game board. The format of the string is defined in the
-     * project specifications. You must use a scanner to parse
-     * the line. The size of the board will be the number of "|"
-     * characters in the boardStr. This routine also should
-     * initialize number of moves to 0.
-     */
-    public void initialize(String boardStr) {
-        // First, count number of lines in the board by counting
-        // number of | in the string and store it size.
+    @Override
+    public boolean isLightOn(int row, int col) {
+        return validPosition(row, col) && board[row][col];
+    }
 
-        // Then allocate a boolean 2d array of the appropriate size
-        // and initialize numMoves to 0
-
-        // Now, parse the boardStr using a scanner and
-        // store the appropriate true/false in each position
-        // in the array.
-
-        Scanner tokenScanner = new Scanner(boardStr);
-        while (tokenScanner.hasNext()) {
-            String token = tokenScanner.next();
-            if (token.equals("x")) {
-                // it is an x, do something
-            } else if (token.equals("o")) {
-                // it is an o, do something
-            } else if (token.equals("|")) {
-                // it is the end of the line, do something
+    @Override
+    public boolean isGameOver() {
+        for (int r = 0; r < size; r++) {
+            for (int c = 0; c < size; c++) {
+                if (board[r][c]) {
+                    return false;
+                }
             }
         }
-        tokenScanner.close();
-    }
-
-    /**
-     * Returns true if [row][col] is a valid position
-     * in the board. That is both row and col need to
-     * be between 0 (inclusive) and size.
-     * 
-     * @param row index for the row
-     * @param col index for the column
-     * @return true if [row][col] is valid, false otherwise.
-     */
-    public boolean validPosition(int row, int col) {
-        return false;
-    }
-
-    /**
-     * Play (toggle the light) at [row][col], also
-     * toggling the four adjacent positions.
-     * If this is called when the game is over, then do nothing.
-     * If row or col is off the board, do nothing.
-     * If a play is made, increment the count of number of moves.
-     * If after the play, the game is over, then increment numWins.
-     * 
-     * @param row index for the row
-     * @param col index for the column
-     */
-    public void play(int row, int col) {
-
-    }
-
-    /**
-     * Play (toggle the light) by button id. play(0)
-     * should result in a call to play(0,0), and play(8)
-     * in a 3x3 game, should result in a call to play(2,2).
-     * 
-     * @param buttonNumber number of the button
-     */
-    public void play(int buttonNumber) {
-
-    }
-
-    /**
-     * Returns the number of moves made in this game so far.
-     * 
-     * @return number of moves made
-     */
-    public int numMoves() {
-        return 0;
-    }
-
-    /**
-     * Returns true if a light at [row][col] is on. It must
-     * check if [row][col] is a valid position and if it is not,
-     * then return false.
-     * 
-     * @return returns true if a light at [row][col] is on, false otherwise.
-     */
-    public boolean isLightOn(int row, int col) {
         return true;
     }
 
-    /**
-     * Returns true if the full board is off, all lights are off.
-     * 
-     * @return true if no lights are one, false otherwise
+    /*
+     * =========================================================
+     * INITIALIZATION
+     * =========================================================
      */
-    public boolean isGameOver() {
-        return false;
+
+    @Override
+    public void initialize() {
+        initialize(RAND.nextInt(LightsOff.boards.length));
     }
 
-    /**
-     * Returns a string of the board in a format that matches
-     * the format processed by initialized(String).
-     * 
-     * @return string representation of the board.
+    @Override
+    public void initialize(int boardIndex) {
+        int index = boardIndex;
+
+        if (index < 0 || index >= LightsOff.boards.length) {
+            index = 0;
+        }
+
+        initialize(LightsOff.boards[index]);
+    }
+
+    @Override
+    public void initialize(String boardStr) {
+        numMoves = 0;
+        size = countRows(boardStr);
+        board = new boolean[size][size];
+
+        int row = 0;
+        int col = 0;
+
+        for (String token : boardStr.split("\\s+")) {
+            if (token.charAt(0) == ROW_SEPARATOR) {
+                row++;
+                col = 0;
+            } else {
+                board[row][col] = token.equals(ON);
+                col++;
+            }
+        }
+    }
+
+    private int countRows(String boardStr) {
+        int rows = 0;
+
+        for (int i = 0; i < boardStr.length(); i++) {
+            if (boardStr.charAt(i) == ROW_SEPARATOR) {
+                rows++;
+            }
+        }
+        return rows;
+    }
+
+    /*
+     * =========================================================
+     * GAME PLAY
+     * =========================================================
      */
+
+    @Override
+    public void play(int row, int col) {
+        if (isGameOver() || !validPosition(row, col)) {
+            return;
+        }
+
+        toggle(row, col);
+        toggle(row - 1, col);
+        toggle(row + 1, col);
+        toggle(row, col - 1);
+        toggle(row, col + 1);
+
+        numMoves++;
+
+        if (isGameOver()) {
+            numWins++;
+        }
+    }
+
+    @Override
+    public void play(int buttonNumber) {
+        play(buttonNumber / size, buttonNumber % size);
+    }
+
+    private void toggle(int row, int col) {
+        if (validPosition(row, col)) {
+            board[row][col] = !board[row][col];
+        }
+    }
+
+    /*
+     * =========================================================
+     * STRING REPRESENTATION
+     * =========================================================
+     */
+
+    @Override
     public String toString() {
-        return "a string";
+        StringBuilder builder = new StringBuilder();
+
+        for (int r = 0; r < size; r++) {
+            for (int c = 0; c < size; c++) {
+                builder.append(board[r][c] ? ON : OFF).append(' ');
+            }
+            builder.append(ROW_SEPARATOR).append('\n');
+        }
+
+        return builder.toString();
     }
 }
